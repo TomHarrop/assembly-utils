@@ -1,5 +1,5 @@
 Bootstrap: shub
-From: tomharrop/singularity-containers:quast_5.0.2
+From: TomHarrop/singularity-containers:quast_5.0.2
 
 %help
     Assembly Genome Browser (AGB)
