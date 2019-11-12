@@ -41,8 +41,8 @@ _EOF_
         python-pip \
         python-setuptools \
         r-base-dev \
-        zlib1g-dev \
-        wget
+        wget \
+        zlib1g-dev
 
     # install circos
     perl -MCPAN -e \
@@ -56,9 +56,9 @@ _EOF_
         install Params::Validate ; \
         install Readonly ; \
         install Regexp::Common ; \
-        install SVG ; \
         install Set::IntSpan ; \
         install Statistics::Basic ; \
+        install SVG ; \
         install Text::Format'
 
     mkdir circos
