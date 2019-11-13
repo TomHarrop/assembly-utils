@@ -39,7 +39,7 @@ _EOF_
 
     # agb
     /usr/bin/pip3 install \
-        git+git://github.com/almiheenko/AGB.git@9c1b39c
+        git+git://github.com/tomharrop/AGB.git@a92723d
 
 %runscript
     exec /usr/local/bin/agb.py "$@"
