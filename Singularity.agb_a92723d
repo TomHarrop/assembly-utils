@@ -7,7 +7,7 @@ From: TomHarrop/assembly-utils:quast_5.0.2
 
 %labels
     MAINTAINER "Tom Harrop"
-    VERSION "AGB 9c1b39c"
+    VERSION "AGB a41ac9e"
 
 %post
     # faster apt downloads, will it break?
@@ -39,7 +39,7 @@ _EOF_
 
     # agb
     /usr/bin/pip3 install \
-         git+git://github.com/almiheenko/AGB.git@9c1b39c
+         git+git://github.com/almiheenko/AGB.git@a41ac9e
 
 %runscript
     exec /usr/local/bin/agb.py "$@"
