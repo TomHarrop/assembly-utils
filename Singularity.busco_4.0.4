@@ -55,7 +55,7 @@ _EOF_
     # build variables
     export AUGUSTUS_CONFIG_PATH="/opt/augustus-3.3.3/config"
     export BUSCO_CONFIG_FILE="/busco/config/config.ini"
-    export PATH="${PATH}:/blast/bin:/opt/augustus-3.3.3/bin:/opt/augustus-3.3/scripts:/busco/scripts"
+    export PATH="${PATH}:/blast/bin:/opt/augustus-3.3.3/bin:/opt/augustus-3.3.3/scripts:/busco/scripts"
     export TOOLDIR=/tools
 
     # use python3
@@ -70,33 +70,33 @@ _EOF_
 
     # augustus dependencies - htslib
     (
-    cd "${TOOLDIR}"
+    cd "${TOOLDIR}" || exit 1
     git clone https://github.com/samtools/htslib.git
-    cd htslib
+    cd htslib || exit 1
     autoheader && autoconf && ./configure && make && make install
     )
 
     # augustus dependencies - bcftools
     (
-    cd "${TOOLDIR}"
+    cd "${TOOLDIR}" || exit 1
     git clone https://github.com/samtools/bcftools.git
-    cd bcftools
+    cd bcftools || exit 1
     autoheader && autoconf && ./configure && make && make install
     )
 
     # augustus dependencies - tabix
     (
-    cd "${TOOLDIR}"
+    cd "${TOOLDIR}" || exit 1
     git clone https://github.com/samtools/tabix.git
-    cd tabix
+    cd tabix || exit 1
     make
     )
 
     # augustus dependencies - samtools
     (
-    cd "${TOOLDIR}"
+    cd "${TOOLDIR}" || exit 1
     git clone https://github.com/samtools/samtools.git
-    cd samtools
+    cd samtools || exit 1
     autoheader && autoconf -Wno-syntax && ./configure && make && make install
     )
 
@@ -109,16 +109,15 @@ _EOF_
         -C /augustus \
         --strip-components 1
     rm -f augustus.tar.gz
-    cd /augustus 
+    cd /augustus || exit 1
     make && make install
     )
 
-    # allow BUSCO to *write* to the augustus config dir. Yuck.
+    # allow *writing* to the augustus config dir. No really.
     chmod -R 777 "${AUGUSTUS_CONFIG_PATH}"
 
     # install blast 2.2.31
     (
-    cd /
     wget -O "blast.tar.gz" \
         ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.2.31/ncbi-blast-2.2.31+-x64-linux.tar.gz
     mkdir /blast
@@ -131,63 +130,33 @@ _EOF_
     # install sepp
     (
     git clone http://github.com/smirarab/sepp.git /sepp
-    cd /sepp
+    cd /sepp || exit 1
     git checkout -f 4.3.10
     git submodule update --init --recursive
     python setup.py config
     python setup.py install
-        )
+    )
 
     # install BUSCO
     (
-        /usr/bin/pip3 install biopython
-        git clone https://gitlab.com/ezlab/busco.git /busco
-        cd /busco
-        git checkout -f  4.0.4 
-        git submodule update --init --recursive
-        python3 setup.py install
+    /usr/bin/pip3 install biopython
+    git clone https://gitlab.com/ezlab/busco.git /busco
+    cd /busco || exit 1
+    git checkout -f  4.0.4 
+    git submodule update --init --recursive
+    python3 setup.py install
+    mv "${BUSCO_CONFIG_FILE}" "${BUSCO_CONFIG_FILE}.default"
+    busco_configurator.py \
+        "${BUSCO_CONFIG_FILE}.default" \
+        "${BUSCO_CONFIG_FILE}"
     )
-    # edit config file
-    cat > "${BUSCO_CONFIG_FILE}" << _EOF_
-[busco_run]
-[tblastn]
-path = /blast/bin/
-command = tblastn
-[makeblastdb]
-path = /blast/bin/
-command = makeblastdb
-[augustus]
-path = /augustus/bin/
-command = augustus
-[etraining]
-path = /augustus/bin/
-command = etraining
-[gff2gbSmallDNA.pl]
-path = /augustus/scripts/
-command = gff2gbSmallDNA.pl
-[new_species.pl]
-path = /augustus/scripts/
-command = new_species.pl
-[optimize_augustus.pl]
-path = /augustus/scripts/
-command = optimize_augustus.pl
-[hmmsearch]
-path = /usr/local/bin/
-command = hmmsearch
-[sepp]
-path = /usr/local/bin/
-command = run_sepp.py
-[prodigal]
-path = /usr/bin/
-command = prodigal
-_EOF_
 
 %environment
 
     export AUGUSTUS_CONFIG_PATH="/opt/augustus-3.3.3/config"
     export BUSCO_CONFIG_FILE="/busco/config/config.ini"
     export TOOLDIR="/tools"
-    export PATH="${PATH}:/blast/bin:/opt/augustus-3.3.3/bin:/opt/augustus-3.3/scripts:/busco/scripts"
+    export PATH="${PATH}:/blast/bin:/opt/augustus-3.3.3/bin:/opt/augustus-3.3.3/scripts:/busco/scripts"
     export LC_ALL=C
 
 %runscript
