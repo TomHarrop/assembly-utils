@@ -1,15 +1,13 @@
-Bootstrap: shub
-From: TomHarrop/align-utils:blast_2.2.31
+Bootstrap: docker
+From: ubuntu:19.10
 
 %help
-
     Container for BUSCO 4.0.4
     http://busco.ezlab.org/
 
     Includes augustus 3.3.3 & ncbi-blast+ 2.2.31
 
 %labels
-
     VERSION "BUSCO 4.0.4"
 
 %post
@@ -115,6 +113,17 @@ _EOF_
 
     # allow *writing* to the augustus config dir. No really.
     chmod -R 777 "${AUGUSTUS_CONFIG_PATH}"
+
+    # install blast 2.2.31
+    (
+    wget -O "blast.tar.gz" \
+        ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.2.31/ncbi-blast-2.2.31+-x64-linux.tar.gz
+    mkdir /blast
+    tar -zxf blast.tar.gz \
+        -C /blast \
+        --strip-components 1
+    rm -f blast.tar.gz
+    )
 
     # install sepp
     (
