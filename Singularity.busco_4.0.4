@@ -111,7 +111,7 @@ _EOF_
     make && make install
     )
 
-    # allow *writing* to the augustus config dir. No really.
+    # allow *writing* to the augustus config dir
     chmod -R 777 "${AUGUSTUS_CONFIG_PATH}"
 
     # install blast 2.2.31
@@ -150,7 +150,6 @@ _EOF_
     )
 
 %environment
-
     export AUGUSTUS_CONFIG_PATH="/opt/augustus-3.3.3/config"
     export BUSCO_CONFIG_FILE="/busco/config/config.ini"
     export TOOLDIR="/tools"
@@ -158,5 +157,4 @@ _EOF_
     export LC_ALL=C
 
 %runscript
-
     exec /usr/local/bin/busco "$@"
